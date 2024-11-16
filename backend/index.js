@@ -4,7 +4,7 @@ import { dbConnection } from "./utility/index.js";
 
 configDotenv();
 
-const port = process.env.PORT
+const port = process.env.PORT || 5000
 
 dbConnection()
     .then(() => {
