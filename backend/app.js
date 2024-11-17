@@ -30,4 +30,9 @@ app.use(cookieParser())
 
 // import and implement routers here
 
+import userRouter from './routes/user.js';
+
+app.use('/api/user',userRouter)
+
+
 export default app;

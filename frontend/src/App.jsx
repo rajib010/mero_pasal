@@ -14,11 +14,9 @@ import {
 
 function App() {
 
-  const isAuthenticated = true
-  const user = {
-    name:'rajib',
-    role:'user'
-  }
+  const isAuthenticated = false
+  const user =null
+  
   return (
     <div className='flex flex-col overflow-hidden bg-white'>
 
