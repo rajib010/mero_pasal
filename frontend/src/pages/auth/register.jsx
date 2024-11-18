@@ -1,7 +1,7 @@
 import { useState } from "react"
 import CommonForm from "@/components/common/form"
 import { registerFormControls } from "@/config"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import useRegister from "@/hooks/use-register"
 
 const initialState = {
@@ -13,15 +13,17 @@ const initialState = {
 export default function Register() {
 
     const { loading, register } = useRegister()
-
+    const navigate = useNavigate()
     const [formData, setFormData] = useState(initialState)
-    
-    const handleSubmit= async (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        await register(formData)
+        const success = await register(formData)
+        if (success) {
+            navigate('/auth/login')
+        }
     }
-
-
+    
     return (
         <div className="mx-auto w-[85%] mb-6">
             <div className="text-center">
@@ -40,7 +42,7 @@ export default function Register() {
             </div>
             <CommonForm
                 formControls={registerFormControls}
-                buttonText={"Sign Up"}
+                buttonText={loading ? 'Registering...' : 'Sign up'}
                 formData={formData}
                 setFormData={setFormData}
                 onSubmit={handleSubmit}

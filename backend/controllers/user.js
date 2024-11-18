@@ -65,13 +65,15 @@ const register = async function (req, res) {
 }
 
 const login = async function (req, res) {
+    console.log("login route hit");
     const { email, password } = req.body
     const requiredFields = ['email', 'password']
+
     const { isValid, missingFields } = checkEmptyFields(req.body, requiredFields)
     if (!isValid) {
         return res.status(400).json({
             success: false,
-            message: "All the fields must be provided"
+            message: `${missingFields} fields empty.`
         })
     }
     try {
@@ -95,17 +97,18 @@ const login = async function (req, res) {
         }
 
         //successfull login
-        return res.status(401).json({
+        return res.status(200).json({
             success: true,
             message: 'Welcome user',
+            user: { username: user?.username, email: user?.email, role:user?.role }
         })
 
-} catch (error) {
-    return res.status(501).json({
-        success: false,
-        message: 'Error logging in. Try again.'
-    })
-}
+    } catch (error) {
+        return res.status(501).json({
+            success: false,
+            message: 'Error logging in. Try again.'
+        })
+    }
 }
 
 export { register, login }

@@ -2,6 +2,7 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import CheckAuth from './components/common/check-auth'
 import { Navbar } from './components'
+import { useSelector } from 'react-redux'
 
 import {
   AdminDashboard, AdminFeatures, AdminLayout, AdminOrders, AdminProducts,
@@ -14,9 +15,8 @@ import {
 
 function App() {
 
-  const isAuthenticated = false
-  const user =null
-  
+  const { user, isAuthenticated } = useSelector((state) => state.auth)
+
   return (
     <div className='flex flex-col overflow-hidden bg-white'>
 
@@ -54,7 +54,7 @@ function App() {
           <Route path='checkout' element={<Checkout />} />
         </Route>
 
-        <Route path='/unauth-page' element={<UnauthPage/>} />
+        <Route path='/unauth-page' element={<UnauthPage />} />
         <Route path="*" element={<NotFound />}>
 
         </Route>

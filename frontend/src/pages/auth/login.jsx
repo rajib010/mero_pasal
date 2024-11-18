@@ -1,7 +1,8 @@
 import { loginFormControls } from "@/config"
 import CommonForm from "@/components/common/form"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import useLogin from "@/hooks/use-login"
 
 const initialState = {
     email: '',
@@ -9,9 +10,14 @@ const initialState = {
 }
 export default function Login() {
     const [formData, setformData] = useState(initialState)
-    const [isBtnDisabled, setIsBtnDisabled] = useState(false)
-    function handleSubmit() {
-
+    const navigate = useNavigate()
+    const { loading, login } = useLogin()
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const success = await login(formData)
+        if (success) {
+            navigate('/shop/home')
+        }
     }
     return (
         <div className="mx-auto w-[85%] mb-6">
@@ -35,8 +41,8 @@ export default function Login() {
                 formData={formData}
                 setFormData={setformData}
                 onSubmit={handleSubmit}
-                buttonText={"Login"}
-                isBtnDisabled={isBtnDisabled}
+                buttonText={loading?'Logging in':'Login'}
+                isBtnDisabled={loading}
             />
         </div>
     )
