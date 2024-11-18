@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { User } from "../models/user.js";
 import checkEmptyFields from "../utility/checkEmpty.js";
 import bcrypt from "bcryptjs"
-import jwt from 'jsonwebtoken'
+import generateTokenSetCookie from "../utility/generateToken&SetCookie.js";
 
 const register = async function (req, res) {
     const { username, email, password } = req.body;
@@ -96,11 +96,12 @@ const login = async function (req, res) {
             })
         }
 
+        generateTokenSetCookie(user?._id, res)
         //successfull login
         return res.status(200).json({
             success: true,
-            message: 'Welcome user',
-            user: { username: user?.username, email: user?.email, role:user?.role }
+            message: `Welcome ${user?.username}`,
+            user: { id: user?._id, username: user?.username, email: user?.email, role: user?.role }
         })
 
     } catch (error) {
@@ -111,4 +112,12 @@ const login = async function (req, res) {
     }
 }
 
-export { register, login }
+const logout = async function (req, res) {
+    await res.cookie("jwtToken", { maxAge: 0 })
+    return res.status(200).json({
+        success: true,
+        message: 'User logged out successfully'
+    })
+}
+
+export { register, login, logout }
