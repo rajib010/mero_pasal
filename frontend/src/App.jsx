@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import CheckAuth from './components/common/check-auth'
 import { Navbar } from './components'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   AdminDashboard, AdminFeatures, AdminLayout, AdminOrders, AdminProducts,
   Register, Login, AuthLayout,
@@ -24,13 +24,14 @@ function App() {
     dispatch(checkAuth())
   }, [dispatch])
 
-  if (loading) return <Loader />
+  if (loading) return <Skeleton className="w-[100vw] h-[100vh] bg-black" />
+
 
   return (
     <div className='flex flex-col overflow-hidden bg-white'>
 
       {/* if logged in show navbar else not */}
-      <Navbar />
+      {/* <Navbar /> */}
       <Routes>
         <Route path="/auth" element={
           <CheckAuth isAuthenticated={isAuthenticated} user={user}>

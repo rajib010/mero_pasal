@@ -41,6 +41,7 @@ export default function Login() {
     const dispatch = useDispatch()
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(!validateForm(formData)) return;
         try {
             const data = await dispatch(loginUser(formData)).unwrap();
 

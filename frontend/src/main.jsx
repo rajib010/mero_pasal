@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')).render(
     <StrictMode>
       <Provider store={store}>
         <App/>
-        <Toaster swipeDirection="right" duration={3000}  />
+        <Toaster swipeDirection="right" />
       </Provider>
     </StrictMode>
   </BrowserRouter>
