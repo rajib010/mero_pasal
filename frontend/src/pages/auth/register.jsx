@@ -2,7 +2,9 @@ import { useState } from "react"
 import CommonForm from "@/components/common/form"
 import { registerFormControls } from "@/config"
 import { Link, useNavigate } from "react-router-dom"
-import useRegister from "@/hooks/use-register"
+import { useDispatch, useSelector } from "react-redux"
+import { registerUser } from "@/store/auth-slice"
+import { toast } from "@/hooks/use-toast"
 
 const initialState = {
     username: '',
@@ -10,20 +12,85 @@ const initialState = {
     password: ''
 }
 
+
 export default function Register() {
 
-    const { loading, register } = useRegister()
-    const navigate = useNavigate()
+    const { loading } = useSelector((state) => state.auth)
     const [formData, setFormData] = useState(initialState)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    function validateForm({ username, password, email }) {
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const alphanumericRegex = /^[a-zA-Z0-9]+$/;
+
+        if (!username || !password || !email) {
+            toast({
+                title: 'Fields cannot be empty',
+                variant: 'destructive',
+            });
+            return false;
+        }
+
+        if (username.length < 3) {
+            toast({
+                title: 'Username must be at least 3 characters long',
+                variant: 'destructive',
+            });
+            return false;
+        }
+
+        if (!emailRegex.test(email)) {
+            toast({
+                title: 'Invalid email format',
+                variant: 'destructive',
+            });
+            return false;
+        }
+
+        if (password.length < 6) {
+            toast({
+                title: 'Password must be at least 6 characters long',
+                variant: 'destructive',
+            });
+            return false;
+        }
+
+        if (!alphanumericRegex.test(password)) {
+            toast({
+                title: 'Password must be alphanumeric',
+                variant: 'destructive',
+            });
+            return false;
+        }
+
+        return true;
+    }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await register(formData)
-        if (success) {
-            navigate('/auth/login')
+        if (!validateForm(formData)) return;
+        try {
+            const data = await dispatch(registerUser(formData)).unwrap();
+            if (data.success) {
+                toast({
+                    title: 'Register Successfull',
+                    description: data.message
+                })
+                navigate('/auth/login')
+            }
+        } catch (error) {
+            console.error("Error Registering User:", error);
+            toast({
+                title: 'Register Failed',
+                description: error?.message || 'Error occured during registering of user.',
+                variant: 'destructive',
+            });
         }
     }
-    
+
     return (
         <div className="mx-auto w-[85%] mb-6">
             <div className="text-center">
@@ -49,4 +116,5 @@ export default function Register() {
             />
         </div>
     )
+
 }

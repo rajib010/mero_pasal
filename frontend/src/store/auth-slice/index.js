@@ -1,39 +1,140 @@
-import { createSlice } from "@reduxjs/toolkit"
-
-//check if the user exists in localstorage
-
-const loaduserfromLocalstorage = () => {
-    try {
-        const user = localStorage.getItem('authenticated-user')
-        return user ? JSON.parse(user) : null
-    } catch (error) {
-        console.log('Error loading user from localstorage', error);
-        return null
-    }
-}
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import axios from "axios"
 
 const initialState = {
-    isAuthenticated: !!loaduserfromLocalstorage(),
+    isAuthenticated: false,
     isLoading: false,
-    user: loaduserfromLocalstorage()
+    user: null
 }
+
+export const registerUser = createAsyncThunk(
+    '/auth/register',
+    async (formData, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(
+                'http://localhost:3000/api/user/register',
+                formData,
+                { withCredentials: true }
+            );
+            return response.data;
+        } catch (error) {
+            const errorMessage =
+                error.response?.data?.message || 'Error during registere.';
+            return rejectWithValue({ message: errorMessage });
+        }
+    }
+);
+
+export const loginUser = createAsyncThunk(
+    '/auth/login',
+    async (formData, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(
+                'http://localhost:3000/api/user/login',
+                formData,
+                { withCredentials: true }
+            );
+            return response.data;
+        } catch (error) {
+            const errorMessage =
+                error.response?.data?.message || 'Error during Login';
+            return rejectWithValue({ message: errorMessage });
+        }
+    }
+);
+
+export const logoutUser = createAsyncThunk(
+    '/auth/logout',
+    async (formData, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(
+                'http://localhost:3000/api/user/logout',
+                {},
+                { withCredentials: true }
+            );
+            return response.data;
+        } catch (error) {
+            const errorMessage =
+                error.response?.data?.message || 'Error during logout';
+            return rejectWithValue({ message: errorMessage });
+        }
+    }
+);
+
+export const checkAuth = createAsyncThunk(
+    '/auth/checkauth',
+    async () => {
+        const response = await axios.get('http://localhost:3000/api/user/check-auth', {
+            withCredentials: true,
+            headers: {
+                "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate"
+            }
+        })
+        return response.data
+    }
+
+)
 
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setUser: (state, action) => {
-            state.isAuthenticated = true,
-            state.user = action.payload
-            localStorage.setItem('authenticated-user', JSON.stringify(action.payload))
-        },
-        logout: (state) => {
-            state.isAuthenticated = false,
-            state.user = null
-            localStorage.removeItem('authenticated-user')
-        }
+        setUser: (state, action) => { }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(registerUser.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(registerUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = null;
+                state.isAuthenticated = false;
+            })
+            .addCase(registerUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.user = null;
+                state.isAuthenticated = false;
+            })
+            .addCase(loginUser.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(loginUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload.success ? action.payload.user : null;
+                state.isAuthenticated = action.payload.success
+            })
+            .addCase(loginUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.user = null;
+                state.isAuthenticated = false
+            })
+            .addCase(checkAuth.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(checkAuth.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload.success ? action.payload.user : null;
+                state.isAuthenticated = action.payload.success;
+            })
+            .addCase(checkAuth.rejected, (state, action) => {
+                state.isLoading = false;
+                state.user = null;
+                state.isAuthenticated = false;
+            })
+            .addCase(logoutUser.pending, (state, action) => {
+                state.isLoading = true;
+            })
+            .addCase(logoutUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = null;
+                state.isAuthenticated = false;
+            })
+            .addCase(logoutUser.rejected, (state, action) => {
+                state.isLoading = false;
+            });
     }
 })
 
-export const { setUser, logout } = authSlice.actions;
+export const { setUser } = authSlice.actions;
 export default authSlice.reducer

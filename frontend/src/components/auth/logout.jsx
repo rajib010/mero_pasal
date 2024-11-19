@@ -1,14 +1,16 @@
 import { Button } from '../ui/button';
-import React from 'react'
-import useLogout from '@/hooks/use-logout'
+import { useDispatch, useSelector } from "react-redux"
+import { logoutUser } from '@/store/auth-slice';
 
 function Logout() {
 
-    const {loading, logoutUser} = useLogout();
+    const dispatch = useDispatch()
+    const { loading } = useSelector((state) => state.auth)
+
     return (
         <div>
-            <Button onClick={logoutUser}>
-                {loading?'Logging Out':'Log Out'}
+            <Button onClick={()=>dispatch(logoutUser())}>
+                {loading ? 'Logging Out' : 'Log Out'}
             </Button>
         </div>
     )

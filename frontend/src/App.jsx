@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import CheckAuth from './components/common/check-auth'
 import { Navbar } from './components'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import {
   AdminDashboard, AdminFeatures, AdminLayout, AdminOrders, AdminProducts,
@@ -12,10 +12,19 @@ import {
   UnauthPage
 
 } from './pages'
+import { checkAuth } from './store/auth-slice'
+import { Loader } from 'lucide-react'
 
 function App() {
 
-  const { user, isAuthenticated } = useSelector((state) => state.auth)  
+  const { user, isAuthenticated, loading } = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(checkAuth())
+  }, [dispatch])
+
+  if (loading) return <Loader />
 
   return (
     <div className='flex flex-col overflow-hidden bg-white'>
