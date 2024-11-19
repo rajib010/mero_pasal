@@ -101,7 +101,8 @@ const login = async function (req, res) {
         return res.status(200).json({
             success: true,
             message: `Welcome ${user?.username}`,
-            user: { id: user?._id, username: user?.username, email: user?.email, role: user?.role }
+            user: { id: user?._id, username: user?.username, email: user?.email, role: user?.role}
+            
         })
 
     } catch (error) {
@@ -113,6 +114,8 @@ const login = async function (req, res) {
 }
 
 const logout = async function (req, res) {
+    console.log('logout route hit');
+    
     await res.cookie("jwtToken", { maxAge: 0 })
     return res.status(200).json({
         success: true,

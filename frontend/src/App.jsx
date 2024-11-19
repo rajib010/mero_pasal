@@ -15,7 +15,7 @@ import {
 
 function App() {
 
-  const { user, isAuthenticated } = useSelector((state) => state.auth)
+  const { user, isAuthenticated } = useSelector((state) => state.auth)  
 
   return (
     <div className='flex flex-col overflow-hidden bg-white'>

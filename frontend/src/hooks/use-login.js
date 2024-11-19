@@ -31,7 +31,7 @@ const useLogin = () => {
             
             toast({
                 title: "Login successful",
-                description: `Welcome ${data.user.username}`,
+                description: data.message,
             });
             return true;
         } catch (error) {

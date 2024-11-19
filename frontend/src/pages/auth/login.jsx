@@ -41,7 +41,7 @@ export default function Login() {
                 formData={formData}
                 setFormData={setformData}
                 onSubmit={handleSubmit}
-                buttonText={loading?'Logging in':'Login'}
+                buttonText={loading ? 'Logging in' : 'Login'}
                 isBtnDisabled={loading}
             />
         </div>
