@@ -3,55 +3,42 @@ import { Navigate, useLocation } from "react-router-dom";
 function CheckAuth({ isAuthenticated, user, children }) {
   const location = useLocation();
 
-  // Redirect to login if not authenticated and trying to access protected routes
   if (
     !isAuthenticated &&
-    !(
-      location.pathname.includes("/auth/login") ||
-      location.pathname.includes("/auth/register")
-    )
+    !location.pathname.includes("/auth/login") &&
+    !location.pathname.includes("/auth/register")
   ) {
-    return <Navigate to="/auth/login" />;
+    return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
 
-  // Redirect authenticated users away from login/register pages
   if (
     isAuthenticated &&
     (location.pathname.includes("/auth/login") ||
       location.pathname.includes("/auth/register"))
   ) {
     if (user?.role === "admin") {
-      return <Navigate to="/admin/dashboard" />;
-    } else if (user?.role === "user") {
-      return <Navigate to="/shop/home" />;
-    }
-  }
-
-  // Redirect users based on roles when accessing restricted routes
-  if (isAuthenticated) {
-    if (user?.role === "user" && location.pathname.includes("/admin")) {
-      return <Navigate to="/shop/home" />;
-    }
-
-    if (user?.role === "admin" && location.pathname.includes("/shop")) {
-      return <Navigate to="/admin/dashboard" />;
-    }
-  }
-
-  // Default redirection from the root route
-  if (location.pathname === "/") {
-    if (!isAuthenticated) {
-      return <Navigate to="/auth/login" />;
+      return <Navigate to="/admin/dashboard" replace />;
     } else {
-      if (user?.role === "admin") {
-        return <Navigate to="/admin/dashboard" />;
-      } else if (user?.role === "user") {
-        return <Navigate to="/shop/home" />;
-      }
+      return <Navigate to="/shop/home" replace />;
     }
   }
 
-  // Render children for all other cases
+  if (
+    isAuthenticated &&
+    user?.role !== "admin" &&
+    location.pathname.startsWith("/admin")
+  ) {
+    return <Navigate to="/unauth-page" replace />;
+  }
+
+  if (
+    isAuthenticated &&
+    user?.role === "admin" &&
+    location.pathname.startsWith("/shop")
+  ) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
   return <>{children}</>;
 }
 
