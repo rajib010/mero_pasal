@@ -1,24 +1,61 @@
 import { Product } from "../models/product.js";
 
+const getFilteredProducts = async (req, res) => {
+  try {
+    const query = Object.keys(req.query).reduce((acc, key) => {
+      acc[key.toLowerCase()] = req.query[key];
+      return acc;
+    }, {});
 
-const getFilteredProducts = async(req,res)=>{
-    console.log('route hit');
-    
-    try {
-        const products = await Product.find({})
+    const { category = "", brand = "", sortby = "price-lowtohigh" } = query;
 
-        return res.status(200).json({
-            success:true,
-            message:'Fetched filtered products successfully',
-            data:products
-        })
-    } catch (error) {
-        console.log('Error getting filtered products');
-        return res.status(500).json({
-            success:false,
-            message:"failed to get filtered products"
-        })
+    let filters = {};
+
+    if (category) {
+      filters.category = { $in: category.split(",") };
     }
-}
 
-export {getFilteredProducts}
+    if (brand) {
+      filters.brand = { $in: brand.split(",") };
+    }
+
+    let sort = {};
+
+    switch (sortby) {
+      case "price-lowtohigh":
+        sort.price = 1;
+        break;
+
+      case "price-hightolow":
+        sort.price = -1;
+        break;
+
+      case "title-atoz":
+        sort.title = 1;
+        break;
+
+      case "title-ztoa":
+        sort.title = -1;
+        break;
+
+      default:
+        sort.price = 1;
+        break;
+    }
+
+    const products = await Product.find(filters).sort(sort);
+
+    res.status(200).json({
+      success: true,
+      data: products,
+    });
+  } catch (e) {
+    console.error("Error fetching filtered products:", e);
+    res.status(500).json({
+      success: false,
+      message: "Some error occurred",
+    });
+  }
+};
+
+export { getFilteredProducts };

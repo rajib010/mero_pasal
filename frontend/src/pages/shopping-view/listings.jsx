@@ -5,26 +5,84 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuRad
 import { sortOptions } from '@/config'
 import { fetchAllFilteredProducts } from '@/store/shop-slice/product'
 import { ArrowUpDownIcon } from 'lucide-react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
+
+
+function createSearchParamsHelper(filterParams) {
+  const queryParams = [];
+
+  for (const [key, value] of Object.entries(filterParams)) {
+    if (Array.isArray(value) && value.length > 0) {
+      const paramValue = value.join(",");
+      queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
+    }
+  }
+
+  return queryParams.join("&");
+}
 
 function Listings() {
 
   const { isLoading, productList } = useSelector((state) => state.shopProducts)
   const dispatch = useDispatch();
+  const [filters, setFilters] = useState({})
+  const [sort, setSort] = useState(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  function handleSort(value) {
+    setSort(value)
+  }
+
+  function handleFilters(getSectionId, getCurrentOption) {
+    let cpyFilters = { ...filters };
+    const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
+
+    if (indexOfCurrentSection === -1) {
+      cpyFilters = {
+        ...cpyFilters,
+        [getSectionId]: [getCurrentOption],
+      };
+    } else {
+      const indexOfCurrentOption =
+        cpyFilters[getSectionId].indexOf(getCurrentOption);
+
+      if (indexOfCurrentOption === -1)
+        cpyFilters[getSectionId].push(getCurrentOption);
+      else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
+    }
+
+    setFilters(cpyFilters);
+    sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
+  }
 
   useEffect(() => {
-    dispatch(fetchAllFilteredProducts())
-  }, [dispatch])
+    if (filters && Object.keys(filters).length > 0) {
+      const createQueryString = createSearchParamsHelper(filters)
+      setSearchParams(new URLSearchParams(createQueryString))
+    }
+  }, [filters])
+
+  useEffect(() => {
+    setSort("price-lowtohigh");
+    setFilters(JSON.parse(sessionStorage.getItem('filters')) || {})
+  }, [])
+
+  useEffect(() => {
+
+    if (filters !== null && sort !== null)
+      dispatch(fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }))
+  }, [dispatch, sort, filters])
 
   return (
-    <div className='grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-4 md:p-6'>
-      <ProductFilter />
+    <div className='grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6'>
+      <ProductFilter filters={filters} handleFilters={handleFilters} />
       <div className='bg-background w-full rounded-lg shadow-sm'>
         <div className='p-4 border-b flex items-center justify-between'>
           <h2 className='text-lg font-extrabold'>All Products</h2>
           <div className='flex items-center gap-3'>
-            <span className='text-muted-foreground'>10 Products</span>
+            <span className='text-muted-foreground'>{productList?.length}</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant='outline' size='sm' className='flex items-center gap-1'>
@@ -33,10 +91,10 @@ function Listings() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align='end' className='w-[200px]'>
-                <DropdownMenuRadioGroup>
+                <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
                   {
                     sortOptions.map((option) => (
-                      <DropdownMenuRadioItem key={option.id}>
+                      <DropdownMenuRadioItem value={option.id} key={option.id}>
                         {option?.label}
                       </DropdownMenuRadioItem>
                     ))
@@ -48,9 +106,9 @@ function Listings() {
         </div>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4'>
           {
-            productList && productList.length > 0 && 
-            productList.map((product)=>(
-              <ShoppingProductTile product={product} key={product?._id}/>
+            productList && productList.length > 0 &&
+            productList.map((product) => (
+              <ShoppingProductTile product={product} key={product?._id} />
             ))
           }
         </div>
