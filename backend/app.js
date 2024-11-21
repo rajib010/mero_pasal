@@ -26,10 +26,12 @@ app.use(cookieParser())
 // import and implement routers here
 
 import userRouter from './routes/user.js';
-import productRouter from './routes/products.js';
+import adminProductRouter from './routes/adminproducts.js';
+import shopProductRouter from './routes/shopproducts.js';
 
 app.use('/api/user', userRouter)
-app.use('/api/admin/products', productRouter)
+app.use('/api/admin/products', adminProductRouter)
+app.use('/api/shop/products', shopProductRouter)
 
 
 export default app;
