@@ -28,10 +28,12 @@ app.use(cookieParser())
 import userRouter from './routes/user.js';
 import adminProductRouter from './routes/adminproducts.js';
 import shopProductRouter from './routes/shopproducts.js';
+import cartRouter from './routes/cart.js';
 
 app.use('/api/user', userRouter)
 app.use('/api/admin/products', adminProductRouter)
 app.use('/api/shop/products', shopProductRouter)
+app.use('/api/shop/cart', cartRouter)
 
 
 export default app;

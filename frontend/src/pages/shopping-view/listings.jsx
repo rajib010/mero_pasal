@@ -9,6 +9,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import ProductDetailsDialog from './product-details'
+import { addToCart, getCartItems } from '@/store/shop-slice/cart'
+import { toast } from '@/hooks/use-toast'
 
 
 function createSearchParamsHelper(filterParams) {
@@ -27,6 +29,8 @@ function createSearchParamsHelper(filterParams) {
 function Listings() {
 
   const { isLoading, productList, productDetails } = useSelector((state) => state.shopProducts)
+  const { user } = useSelector(state => state.auth)
+
   const dispatch = useDispatch();
   const [filters, setFilters] = useState({})
   const [sort, setSort] = useState(null)
@@ -36,6 +40,7 @@ function Listings() {
   function handleSort(value) {
     setSort(value)
   }
+
 
   function handleFilters(getSectionId, getCurrentOption) {
     let cpyFilters = { ...filters };
@@ -54,16 +59,26 @@ function Listings() {
         cpyFilters[getSectionId].push(getCurrentOption);
       else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
     }
-
     setFilters(cpyFilters);
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
 
+
   function handleGetProductDetails(getCurrentProductId) {
-
     dispatch(getProductDetail(getCurrentProductId))
-    console.log(getCurrentProductId);
+  }
 
+  function handleAddtoCart(productId) {
+    const userId = user?._id
+    dispatch(addToCart({ userId, productId, quantity: 1 }))
+      .then((data) => {
+        if (data.payload?.success) {
+          toast({
+            title: "Item added to Cart"
+          })
+          dispatch(getCartItems(userId))
+        }
+      })
 
   }
 
@@ -75,20 +90,24 @@ function Listings() {
     }
   }, [filters])
 
+
   useEffect(() => {
     setSort("price-lowtohigh");
     setFilters(JSON.parse(sessionStorage.getItem('filters')) || {})
   }, [])
 
-  useEffect(() => {
 
+  useEffect(() => {
     if (filters !== null && sort !== null)
       dispatch(fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }))
   }, [dispatch, sort, filters])
 
+
   useEffect(() => {
     if (productDetails !== null) setOpenDetailsDialog(true)
   }, [productDetails])
+
+
   return (
     <div className='grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6'>
       <ProductFilter filters={filters} handleFilters={handleFilters} />
@@ -126,6 +145,7 @@ function Listings() {
                 product={product}
                 key={product?._id}
                 handleGetProductDetails={handleGetProductDetails}
+                handleAddtoCart={handleAddtoCart}
               />
             ))
           }

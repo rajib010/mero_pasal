@@ -1,5 +1,5 @@
 import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import { Button } from '../ui/button'
@@ -9,6 +9,8 @@ import { DropdownMenu, DropdownMenuItem } from '../ui/dropdown-menu'
 import { DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { logoutUser } from '@/store/auth-slice'
+import UserCartWrapper from './cart-wrapper'
+import { getCartItems } from '@/store/shop-slice/cart'
 
 
 function MenuItems() {
@@ -32,17 +34,36 @@ function MenuItems() {
 function HeaderRightContent({ user }) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  
+  const [openCartSheet, setOpenCartSheet] = useState(false)
+  const { cartItems } = useSelector(state => state.shopCart)
+
+
   function handleLogout() {
     dispatch(logoutUser())
   }
 
+  useEffect(() => {
+    dispatch(getCartItems(user?._id))
+  }, [dispatch])
+
   return (
     <div className='flex lg:items-center flex-col md:flex-row gap-4'>
-      <Button variant='outline' size='icon'>
-        <ShoppingCart className='w-6 h-6' />
-        <span className='sr-only'>Cart Icon</span>
-      </Button>
+      <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
+        <Button
+          onClick={() =>
+            setOpenCartSheet(true)
+          } variant='outline'
+          size='icon'>
+          <ShoppingCart className='w-6 h-6' />
+          <span className='sr-only'>Cart Icon</span>
+        </Button>
+        <UserCartWrapper
+          cartItems={cartItems &&
+            cartItems.items &&
+            cartItems.items.length > 0 ?
+            cartItems.items :
+            []} />
+      </Sheet>
       <DropdownMenu className='mt-10'>
         <DropdownMenuTrigger asChild>
           <Avatar className="bg-black">
@@ -89,14 +110,14 @@ export default function ShoppingHeader() {
           </SheetTrigger>
           <SheetContent side='left' className='w-full max-w-xs'>
             <MenuItems />
-            <HeaderRightContent user={user}/>
+            <HeaderRightContent user={user} />
           </SheetContent>
         </Sheet>
         <div className='hidden lg:block'>
           <MenuItems />
         </div>
         <div className='hidden lg:block'>
-          <HeaderRightContent user={user}/>
+          <HeaderRightContent user={user} />
         </div>
       </div>
     </header>
