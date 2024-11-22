@@ -3,7 +3,8 @@ import axios from "axios";
 
 const initialState = {
     isLoading: false,
-    productList: []
+    productList: [],
+    productDetails: null
 }
 
 export const fetchAllFilteredProducts = createAsyncThunk(
@@ -12,16 +13,24 @@ export const fetchAllFilteredProducts = createAsyncThunk(
         const query = new URLSearchParams({
             ...filterParams,
             sortBy: sortParams,
-        });
-
+        });        
         const result = await axios.get(
             `http://localhost:3000/api/shop/products/get?${query}`
         );
-        console.log(`http://localhost:3000/api/shop/products/get?${query}`);
-        
+
         return result?.data;
     }
 );
+
+export const getProductDetail = createAsyncThunk(
+    "/products/getProductDetail",
+    async (productId) => {
+        const result = await axios.get(
+            `http://localhost:3000/api/shop/products/getproduct/${productId}`
+        );
+        return result?.data
+    }
+)
 
 
 const shopProductsSlice = createSlice({
@@ -41,6 +50,18 @@ const shopProductsSlice = createSlice({
             .addCase(fetchAllFilteredProducts.rejected, (state, action) => {
                 state.isLoading = false
                 state.productList = []
+            })
+            .addCase(getProductDetail.pending, (state, action) => {
+                state.isLoading = true
+                state.productDetails = []
+            })
+            .addCase(getProductDetail.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.productDetails = action.payload?.data
+            })
+            .addCase(getProductDetail.rejected, (state, action) => {
+                state.isLoading = false
+                state.productDetails = []
             })
 
     }

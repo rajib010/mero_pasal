@@ -3,11 +3,12 @@ import { ShoppingProductTile } from '@/components/shopping-view/product-tile'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu'
 import { sortOptions } from '@/config'
-import { fetchAllFilteredProducts } from '@/store/shop-slice/product'
+import { fetchAllFilteredProducts, getProductDetail } from '@/store/shop-slice/product'
 import { ArrowUpDownIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
+import ProductDetailsDialog from './product-details'
 
 
 function createSearchParamsHelper(filterParams) {
@@ -25,11 +26,12 @@ function createSearchParamsHelper(filterParams) {
 
 function Listings() {
 
-  const { isLoading, productList } = useSelector((state) => state.shopProducts)
+  const { isLoading, productList, productDetails } = useSelector((state) => state.shopProducts)
   const dispatch = useDispatch();
   const [filters, setFilters] = useState({})
   const [sort, setSort] = useState(null)
   const [searchParams, setSearchParams] = useSearchParams()
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false)
 
   function handleSort(value) {
     setSort(value)
@@ -57,6 +59,15 @@ function Listings() {
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
 
+  function handleGetProductDetails(getCurrentProductId) {
+
+    dispatch(getProductDetail(getCurrentProductId))
+    console.log(getCurrentProductId);
+
+
+  }
+
+
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
       const createQueryString = createSearchParamsHelper(filters)
@@ -75,6 +86,9 @@ function Listings() {
       dispatch(fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }))
   }, [dispatch, sort, filters])
 
+  useEffect(() => {
+    if (productDetails !== null) setOpenDetailsDialog(true)
+  }, [productDetails])
   return (
     <div className='grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6'>
       <ProductFilter filters={filters} handleFilters={handleFilters} />
@@ -108,11 +122,16 @@ function Listings() {
           {
             productList && productList.length > 0 &&
             productList.map((product) => (
-              <ShoppingProductTile product={product} key={product?._id} />
+              <ShoppingProductTile
+                product={product}
+                key={product?._id}
+                handleGetProductDetails={handleGetProductDetails}
+              />
             ))
           }
         </div>
       </div>
+      <ProductDetailsDialog open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetails={productDetails} />
     </div>
   )
 }
