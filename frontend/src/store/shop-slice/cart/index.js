@@ -45,10 +45,10 @@ export const updateCartItems = createAsyncThunk(
 export const deleteCartItems = createAsyncThunk(
     '/products/cart-delete',
     async ({ userId, productId }) => {
+        // console.log(`http://localhost:3000/api/shop/cart/delete-cart/${userId}/${productId}`);
         const res = await axios.delete(
             `http://localhost:3000/api/shop/cart/delete-cart/${userId}/${productId}`
         )
-
         return res?.data
     }
 )

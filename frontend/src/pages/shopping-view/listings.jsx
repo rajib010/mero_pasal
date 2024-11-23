@@ -79,7 +79,6 @@ function Listings() {
           dispatch(getCartItems(userId))
         }
       })
-
   }
 
 
@@ -151,7 +150,12 @@ function Listings() {
           }
         </div>
       </div>
-      <ProductDetailsDialog open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetails={productDetails} />
+      <ProductDetailsDialog 
+      open={openDetailsDialog} 
+      setOpen={setOpenDetailsDialog} 
+      productDetails={productDetails} 
+        
+      />
     </div>
   )
 }

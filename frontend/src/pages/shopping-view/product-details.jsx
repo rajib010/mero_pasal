@@ -5,8 +5,27 @@ import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { StarIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { useDispatch, useSelector } from 'react-redux'
+import { addToCart, getCartItems } from '@/store/shop-slice/cart'
+import { toast } from '@/hooks/use-toast'
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
+    const { user } = useSelector(state => state.auth)
+    const dispatch = useDispatch()
+
+    function handleAddtoCart(productId) {
+        const userId = user?._id
+        dispatch(addToCart({ userId, productId, quantity: 1 }))
+            .then((data) => {
+                if (data.payload?.success) {
+                    toast({
+                        title: "Item added to Cart"
+                    })
+                    dispatch(getCartItems(userId))
+                }
+            })
+    }
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTitle className='text-3xl font-extrabold'>{productDetails?.title}</DialogTitle>
@@ -44,7 +63,9 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                         <span className='text-muted-foreground'>4.7</span>
                     </div>
                     <div className='mt-5'>
-                        <Button className='w-full'>
+                        <Button
+                            onClick={() => handleAddtoCart(productDetails?._id)}
+                            className='w-full'>
                             Add to Cart
                         </Button>
                     </div>
