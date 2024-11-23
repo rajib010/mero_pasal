@@ -13,7 +13,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
         const query = new URLSearchParams({
             ...filterParams,
             sortBy: sortParams,
-        });        
+        });
         const result = await axios.get(
             `http://localhost:3000/api/shop/products/get?${query}`
         );
@@ -37,7 +37,9 @@ const shopProductsSlice = createSlice({
     name: 'shopProducts',
     initialState,
     reducers: {
-
+        setProductDetails: (state, action) => {
+            state.productDetails = null
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchAllFilteredProducts.pending, (state, action) => {
@@ -67,5 +69,6 @@ const shopProductsSlice = createSlice({
     }
 })
 
+export const { setProductDetails } = shopProductsSlice.actions
 
 export default shopProductsSlice.reducer
