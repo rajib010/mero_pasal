@@ -40,6 +40,8 @@ const Home = () => {
   const slides = [img1, img3, img4];
   const [currentSlide, setCurrentSlide] = useState(0)
   const { productList, productDetails } = useSelector(state => state.shopProducts)
+  console.log(productDetails);
+  
   const { user } = useSelector(state => state.auth)
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false)
   const dispatch = useDispatch()
@@ -67,10 +69,10 @@ const Home = () => {
     dispatch(addToCart({ userId, productId, quantity: 1 }))
       .then((data) => {
         if (data.payload?.success) {
+          dispatch(getCartItems(userId))
           toast({
             title: "Item added to Cart"
           })
-          dispatch(getCartItems(userId))
         }
       })
   }
@@ -177,13 +179,12 @@ const Home = () => {
             }
           </div>
         </div>
-        <ProductDetailsDialog
-          open={openDetailsDialog}
-          setOpen={setOpenDetailsDialog}
-          productDetails={productDetails}
-
-        />
       </section>
+      <ProductDetailsDialog
+        open={openDetailsDialog}
+        setOpen={setOpenDetailsDialog}
+        productDetails={productDetails}
+      />
     </div>
   )
 }

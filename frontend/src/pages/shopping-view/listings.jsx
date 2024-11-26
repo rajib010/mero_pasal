@@ -154,7 +154,6 @@ function Listings() {
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
-
       />
     </div>
   )
