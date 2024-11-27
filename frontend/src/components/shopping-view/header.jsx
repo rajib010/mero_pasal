@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import { Button } from '../ui/button'
 import { useDispatch, useSelector } from 'react-redux'
 import { shoppingViewMenuHeaderItems } from '@/config'
-import { DropdownMenu, DropdownMenuItem,DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { logoutUser } from '@/store/auth-slice'
 import UserCartWrapper from './cart-wrapper'
@@ -73,6 +73,7 @@ function HeaderRightContent({ user }) {
           <span className='sr-only'>Cart Icon</span>
         </Button>
         <UserCartWrapper
+          setOpenCartSheet={setOpenCartSheet}
           cartItems={cartItems &&
             cartItems.items &&
             cartItems.items.length > 0 ?
