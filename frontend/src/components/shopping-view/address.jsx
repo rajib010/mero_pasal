@@ -15,7 +15,7 @@ const initialAddressFormData = {
     notes: ''
 };
 
-function Address({ customClass = 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ' }) {
+function Address({ customClass = 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ', setCurrentSelectedAddress, currentSelectedAddress }) {
     const [formData, setFormData] = useState(initialAddressFormData);
     const { addressList } = useSelector(state => state.useraddress);
     const dispatch = useDispatch();
@@ -108,6 +108,8 @@ function Address({ customClass = 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ' })
                 {addressList?.length > 0 &&
                     addressList.map((item) => (
                         <AddressCard
+                            currentSelectedAddress={currentSelectedAddress}
+                            setCurrentSelectedAddress={setCurrentSelectedAddress}
                             addressInfo={item}
                             key={item?._id}
                             handleUpdateAddress={handleUpdateAddress}

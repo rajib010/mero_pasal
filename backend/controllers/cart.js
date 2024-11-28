@@ -218,4 +218,36 @@ const updateCart = async (req, res) => {
 }
 
 
-export { addToCart, deleteFromCart, updateCart, fetchFromCart }
+const deleteAllCartItems = async (req, res) => {
+    try {
+        const { userId } = req.params
+        if (!isValidObjectId(userId)) {
+            return res.status(404).json({
+                success: false,
+                message: 'Invalid user id'
+            })
+        }
+        const result = await Cart.findOneAndDelete({ userId })
+        if (!result) {
+            return res.status(500).json({
+                success: false,
+                message: 'Error deleting all the cart items'
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'cart items deleted successfully'
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: error?.message || 'Error deleting all the cart items'
+        })
+    }
+}
+
+
+export { addToCart, deleteFromCart, updateCart, fetchFromCart, deleteAllCartItems }

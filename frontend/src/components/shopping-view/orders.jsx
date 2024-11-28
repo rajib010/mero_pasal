@@ -4,9 +4,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Button } from '../ui/button'
 import { ShoppingOrdersDetailView } from './order-details'
 import { Dialog } from '../ui/dialog'
+import { useSelector } from 'react-redux'
 
 const ShoppingOrders = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false)
+  const {orderList, orderDetails}= useSelector(state=>state.shopOrder)
+
+  console.log(orderDetails, orderList);
+  
 
   return (
     <Card>

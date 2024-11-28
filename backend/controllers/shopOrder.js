@@ -5,7 +5,7 @@ const createOrder = async (req, res) => {
     try {
         const {
             userId, cartItems, addressInfo, orderStatus, paymentMethod,
-            paymentStatus, totalAmount, paymentId, payerId
+            paymentStatus, totalAmount,orderDate,orderUpdateDate, paymentId, payerId
         } = req.body;
 
         //validate fields
@@ -44,6 +44,8 @@ const createOrder = async (req, res) => {
             paymentMethod,
             paymentStatus: paymentStatus || 'Unpaid',
             totalAmount,
+            orderDate,
+            orderUpdateDate,
             paymentId,
             payerId
         });

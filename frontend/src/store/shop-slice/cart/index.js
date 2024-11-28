@@ -53,6 +53,16 @@ export const deleteCartItems = createAsyncThunk(
     }
 )
 
+export const deleteAllCartItems = createAsyncThunk(
+    '/products/cart-deleteAll',
+    async (userId) => {
+        const res = await axios.delete(
+            `http://localhost:3000/api/shop/cart/delete-all-cart/${userId}`
+        )
+        return res?.data
+    }
+)
+
 
 const shoppingCartSlice = createSlice({
     name: 'shoppingCart',
@@ -104,6 +114,16 @@ const shoppingCartSlice = createSlice({
             .addCase(deleteCartItems.rejected, (state, action) => {
                 state.isLoading = false
                 state.cartItems = []
+            })
+            .addCase(deleteAllCartItems.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.cartItems = []
+            })
+            .addCase(deleteAllCartItems.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(deleteAllCartItems.rejected, (state, action) => {
+                state.isLoading = false
             })
     }
 })
