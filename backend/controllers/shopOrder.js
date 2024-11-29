@@ -85,12 +85,6 @@ const getAllOrdersByUser = async (req, res) => {
         }
 
         const userOrders = await Order.find({ userId })
-        if (!userOrders) {
-            return res.status(404).json({
-                success: false,
-                message: 'User order doesnot exist'
-            })
-        }
 
         return res.status(200).json({
             success: true,

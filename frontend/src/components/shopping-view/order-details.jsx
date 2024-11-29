@@ -2,8 +2,11 @@ import React from 'react'
 import { DialogContent, DialogTitle } from '../ui/dialog'
 import { Label } from '../ui/label'
 import { Separator } from '../ui/separator'
+import { useSelector } from 'react-redux'
 
-export const ShoppingOrdersDetailView = () => {
+export const ShoppingOrdersDetailView = ({ orderItem }) => {
+
+    const { user } = useSelector(state => state.auth)
 
     return (
         <DialogContent className='sm:max-w-[600px]'>
@@ -12,19 +15,19 @@ export const ShoppingOrdersDetailView = () => {
                 <div className="grid gap-2">
                     <div className="flex mt-6 items-center justify-between">
                         <p className='font-medium'>Order ID</p>
-                        <Label>123456</Label>
+                        <Label>{orderItem?._id}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className='font-medium'>Order Date</p>
-                        <Label>19/12/2001</Label>
+                        <Label>{orderItem?.orderDate.split("T")[0]}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className='font-medium'>Order Status</p>
-                        <Label>In process</Label>
+                        <Label>{orderItem?.orderStatus}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className='font-medium'>Price</p>
-                        <Label>Rs. 50000</Label>
+                        <Label>{orderItem?.totalAmount}</Label>
                     </div>
                 </div>
                 <Separator />
@@ -32,10 +35,15 @@ export const ShoppingOrdersDetailView = () => {
                     <div className="grid gap-2">
                         <div className='font-medium'>Order Details</div>
                         <ul className='grid gap-3'>
-                            <li className='flex items-center justify-between'>
-                                <span>Product One</span>
-                                <span>Rs. 1000</span>
-                            </li>
+                            {orderItem?.cartItems && orderItem?.cartItems.length > 0
+                                ? orderItem?.cartItems.map((item) => (
+                                    <li key={item?._id} className="flex items-center justify-between">
+                                        <span>Title: {item.title}</span>
+                                        <span>Quantity: {item.quantity}</span>
+                                        <span>Price: ${item.price}</span>
+                                    </li>
+                                ))
+                                : null}
                         </ul>
                     </div>
                 </div>
@@ -44,12 +52,12 @@ export const ShoppingOrdersDetailView = () => {
                     <div className="grid gap-2">
                         <div className="font-medium">Shipping Info</div>
                         <div className='grid gap-0.5 text-muted-foreground'>
-                            <span>Name</span>
-                            <span>Address</span>
-                            <span>City</span>
-                            <span>Pincode</span>
-                            <span>Phone Number</span>
-                            <span>Notes</span>
+                            <span>{user?.username}</span>
+                            <span>{orderItem?.addressInfo?.address}</span>
+                            <span>{orderItem?.addressInfo?.city}</span>
+                            <span>{orderItem?.addressInfo?.pincode}</span>
+                            <span>{orderItem?.addressInfo?.phone}</span>
+                            <span>{orderItem?.addressInfo?.notes}</span>
                         </div>
                     </div>
                 </div>

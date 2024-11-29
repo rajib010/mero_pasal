@@ -6,6 +6,7 @@ import Address from '@/components/shopping-view/address'
 import ShoppingOrders from '@/components/shopping-view/orders'
 
 const Account = () => {
+
   return (
     <div className='flex flex-col'>
       <div className="relative h-[300px] w-full overflow-hidden">

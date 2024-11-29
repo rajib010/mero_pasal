@@ -64,7 +64,8 @@ const shoppingOrderSlice = createSlice({
             })
             .addCase(getAllOrders.fulfilled, (state, action) => {
                 state.isLoading = false
-                console.log(action.payload.data);
+                state.orderList = action.payload?.data
+                
             })
             .addCase(getAllOrders.rejected, (state, action) => {
                 state.isLoading = false
@@ -77,7 +78,8 @@ const shoppingOrderSlice = createSlice({
             })
             .addCase(getOrderDetails.fulfilled, (state, action) => {
                 state.isLoading = false
-                console.log(action.payload);
+                orderId = action.payload?.data?._id
+                orderDetails = action.payload?.data
             })
             .addCase(getOrderDetails.rejected, (state, action) => {
                 state.isLoading = false

@@ -70,11 +70,11 @@ function Checkout() {
 
     dispatch(createOrder(orderData)).then((data) => {
       if (data.payload?.success) {
-        dispatch(deleteAllCartItems(user?._id))
         toast({
           title: 'Checkout complete',
           message: 'Thank you for shopping with us',
         });
+        dispatch(deleteAllCartItems(user?._id))
         navigate('/shop/account');
       }
     });
