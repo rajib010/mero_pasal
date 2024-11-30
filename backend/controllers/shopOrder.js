@@ -77,7 +77,7 @@ const createOrder = async (req, res) => {
 const getAllOrdersByUser = async (req, res) => {
     try {
         const { userId } = req.params;
-        if (!isValidObjectId(userId)) {
+        if (userId && !isValidObjectId(userId)) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid User Id'

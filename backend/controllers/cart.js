@@ -51,23 +51,25 @@ const addToCart = async (req, res) => {
 const fetchFromCart = async (req, res) => {
     try {
         const { userId } = req.params
-        if (!isValidObjectId(userId)) {
+        if (userId && !isValidObjectId(userId)) {
             return res.status(500).json({
                 success: false,
                 message: 'Not a valid user'
             })
         }
-        const cart = await Cart.findOne({ userId }).populate({
+        const cart = await Cart.findOne({ userId })
+        if (!cart || cart.items.length === 0) {
+            return res.status(200).json({
+                success: true,
+                data: {}
+            })
+        }
+
+        await cart.populate({
             path: 'items.productId',
             select: "image title price salePrice"
         })
 
-        if (!cart) {
-            return res.status(404).json({
-                success: false,
-                message: 'Cart not found'
-            })
-        }
 
         const validItems = cart.items.filter(productItem => productItem.productId)
 
@@ -96,10 +98,12 @@ const fetchFromCart = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             success: false,
-            message: error?.message || 'Error fetching from the cart'
+            message: 'Error fetching from the cart'
         })
     }
 }
+
+
 const deleteFromCart = async (req, res) => {
     try {
         const { userId, productId } = req.params
@@ -167,14 +171,6 @@ const updateCart = async (req, res) => {
         }
 
         const cart = await Cart.findOne({ userId })
-
-        if (!cart) {
-            return res.status(404).json({
-                success: false,
-                message: 'Cart not found'
-            })
-        }
-
         const findCurrentProductIndex = cart.items.findIndex(item => item.productId.toString() === productId)
         if (findCurrentProductIndex === -1) {
             return res.status(404).json({

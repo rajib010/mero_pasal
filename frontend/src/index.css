@@ -64,3 +64,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities{
+  .card-header{
+    @apply text-center font-bold text-3xl;
+  }
+
+  .section-card{
+    @apply m-3 grid grid-cols-1 gap-3 border shadow-lg p-5 rounded-md md:w-[95%] md:mx-auto;
+  }
+
+  .center{
+    @apply flex justify-center items-center;
+  }
+
+  .landing-card{
+    @apply cursor-pointer p-4 transform hover:shadow-lg hover:-translate-y-1 transition-shadow border-gray-300
+  }
+}

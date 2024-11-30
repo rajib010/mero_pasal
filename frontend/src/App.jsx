@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
+import LandingPage from "./components/common/LandingPage";
 
 
 function App() {
@@ -39,10 +40,7 @@ function App() {
         <Route
           path="/"
           element={
-            <CheckAuth
-              isAuthenticated={isAuthenticated}
-              user={user}
-            ></CheckAuth>
+            <LandingPage />
           }
         />
         <Route
