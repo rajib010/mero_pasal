@@ -31,6 +31,7 @@ import shopProductRouter from './routes/shopproducts.js';
 import cartRouter from './routes/cart.js';
 import addressRouter from './routes/address.js';
 import shopOrderRouter from './routes/shopOrder.js';
+import dashboardRouter from './routes/dashboard.js'
 
 app.use('/api/user', userRouter)
 app.use('/api/admin/products', adminProductRouter)
@@ -38,6 +39,7 @@ app.use('/api/shop/products', shopProductRouter)
 app.use('/api/shop/cart', cartRouter)
 app.use('/api/user/address', addressRouter)
 app.use('/api/shop/order', shopOrderRouter)
+app.use('/api/dashboard', dashboardRouter)
 
 
 export default app;

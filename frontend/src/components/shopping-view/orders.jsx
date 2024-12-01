@@ -63,7 +63,6 @@ const ShoppingOrders = () => {
                     </Dialog>
                   </TableCell>
                 </TableRow>
-
               ))
             }
 
