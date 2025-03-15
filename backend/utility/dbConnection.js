@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 export const dbConnection = async function () {
     try {
-        const response = await mongoose.connect(`${process.env.MONGODB_URI}/${process.env.DB_NAME}`)
+        const response = await mongoose.connect(`${process.env.MONGODB_URI}`)
         if(!response){
             console.log("failed db connection");
             return false;

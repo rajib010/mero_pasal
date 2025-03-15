@@ -1,6 +1,6 @@
-import React from 'react'
+
 import { Card, CardContent, CardFooter } from '../ui/card'
-import { Badge } from '../ui/badge'
+
 import { Button } from '../ui/button'
 import { ProductDeleteButton } from './deleteConfirmation'
 
@@ -16,7 +16,7 @@ export function AdminProductTile({ product, setOpenCreateProductsDialog, setForm
                     />
                 </div>
                 <CardContent>
-                    <h2 className='text-xl font-bold mb-2'>{product?.title}</h2>
+                    <h2 className='text-xl font-bold my-3'>{product?.title}</h2>
                     <div className='flex justify-between items-center mb-2'>
                         <span
                             className={`text-lg font-semibold ${product?.salePrice > 0 ? ' line-through text-red-600 ' : ' text-primary '}`}>

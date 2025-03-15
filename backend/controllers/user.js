@@ -6,6 +6,8 @@ import generateTokenSetCookie from "../utility/generateToken&SetCookie.js";
 
 const register = async function (req, res) {
     const { username, email, password } = req.body;
+    console.log(password);
+    
 
     // check if any fields are empty
     const requiredFields = ['username', 'email', 'password']
