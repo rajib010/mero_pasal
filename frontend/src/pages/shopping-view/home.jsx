@@ -91,7 +91,7 @@ const Home = () => {
 
   return (
     <div className='flex flex-col min-h-screen'>
-      <div className="w-full relative h-[600px] overflow-hidden">
+      <div className="w-full relative h-[300px]  overflow-hidden md:h-[600px]">
         {
           slides.map((slide, i) => (
             <img
@@ -99,7 +99,7 @@ const Home = () => {
               alt={`image${i}`}
               key={i}
               className={`${i === currentSlide ? 'opacity-100 ' : 'opacity-0 '}
-                  absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
+                  absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 sm:w-full sm:object-contain sm:h-fit`}
             />
           ))}
         <Button variant='outline'

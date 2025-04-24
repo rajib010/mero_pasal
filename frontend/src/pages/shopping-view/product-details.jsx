@@ -4,7 +4,6 @@ import React from 'react'
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { StarIcon } from 'lucide-react'
-import { Input } from '@/components/ui/input'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToCart, getCartItems } from '@/store/shop-slice/cart'
 import { toast } from '@/hooks/use-toast'
@@ -32,9 +31,9 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     }
 
     return (
-        <Dialog open={open} onOpenChange={handleDialogClose}>
-            <DialogTitle className='text-3xl font-extrabold'>{productDetails?.title}</DialogTitle>
-            <DialogContent className='grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]'>
+        <Dialog className="" open={open} onOpenChange={handleDialogClose}>
+            <DialogTitle className='text-3xl font-extrabold'>{productDetails?.title ?? ""}</DialogTitle>
+            <DialogContent className='grid grid-cols-2 gap-8 max-h-[90vh] overflow-scroll sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]'>
                 <div className='relative overflow-hidden rounded-lg'>
                     <img
                         src={productDetails?.image}
@@ -52,7 +51,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                     </div>
                     <div className='flex justify-between  mb-2'>
                         <span className={`${productDetails?.salePrice > 0 ? ' line-through text-red-600 ' : ''}text-lg font-semibold text-primary`}>
-                            Rs. {productDetails?.price}</span>
+                            Rs.{productDetails?.price}</span>
                         {
                             productDetails?.salePrice > 0 ? <span className='text-lg text-green-600 font-semibold'>Rs. {productDetails?.salePrice}</span> : null
                         }
@@ -97,13 +96,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                                 </div>
                             </div>
                         </div>
-                        <div className='mt-6 flex gap-2'>
-                            <Input
-                                placeholder="Leave a review"
-                                className='border-black'
-                            />
-                            <Button> Submit </Button>
-                        </div>
+                    
                     </div>
                 </div>
 
