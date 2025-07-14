@@ -9,7 +9,8 @@ import { toast } from "@/hooks/use-toast"
 const initialState = {
     username: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword:''
 }
 
 
@@ -20,7 +21,7 @@ export default function Register() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    function validateForm({ username, password, email }) {
+    function validateForm({ username, password, email, confirmPassword }) {
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const alphanumericRegex = /^[a-zA-Z0-9]+$/;
@@ -33,6 +34,13 @@ export default function Register() {
             return false;
         }
 
+        if(password !== confirmPassword){
+            toast({
+                title: 'Passwords donot match',
+                variant: 'destructive',
+            });
+            return false;
+        }
         if (username.length < 3) {
             toast({
                 title: 'Username must be at least 3 characters long',
@@ -72,8 +80,10 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm(formData)) return;
+
+        const {confirmPassword, ...remainingValues }=formData
         try {
-            const data = await dispatch(registerUser(formData)).unwrap();
+            const data = await dispatch(registerUser(remainingValues)).unwrap();
             if (data.success) {
                 toast({
                     title: 'Register Successfull',
