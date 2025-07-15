@@ -20,7 +20,8 @@ import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
 import LandingPage from "./components/common/LandingPage";
-
+import PaymentSuccess from "./pages/payment/success";
+import PaymentFailure from "./pages/payment/failure";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -43,6 +44,9 @@ function App() {
             <LandingPage />
           }
         />
+          <Route path="success" element={<PaymentSuccess />} />
+          <Route path="failure" element={<PaymentFailure />} />
+
         <Route
           path="/auth"
           element={

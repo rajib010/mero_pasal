@@ -4,6 +4,7 @@ import { DialogContent, DialogTitle } from '../ui/dialog'
 import { Label } from '../ui/label'
 import { Separator } from '../ui/separator'
 import CommonForm from '../common/form'
+import { useDispatch, useSelector } from 'react-redux'
 
 const initialValue = {
     status: " "
@@ -14,26 +15,27 @@ export const AdminOrdersDetailView = () => {
 
     function handleUpdateStatus(e) {
         e.preventDefault();
+
     }
 
     return (
-        <DialogContent className='sm:max-w-[600px]'>
+        <DialogContent className='sm:max-w-[600px] max-h-[95vh]'>
             <DialogTitle>Order Detail</DialogTitle>
-            <div className="grid gap-6">
-                <div className="grid gap-2">
+            <div className="grid gap-4">
+                <div className="grid gap-1">
                     <div className="flex mt-6 items-center justify-between">
                         <p className='font-medium'>Order ID</p>
                         <Label>123456</Label>
                     </div>
-                    <div className="flex mt-2 items-center justify-between">
+                    <div className="flex mt-1 items-center justify-between">
                         <p className='font-medium'>Order Date</p>
                         <Label>19/12/2001</Label>
                     </div>
-                    <div className="flex mt-2 items-center justify-between">
+                    <div className="flex mt-1 items-center justify-between">
                         <p className='font-medium'>Order Status</p>
                         <Label>In process</Label>
                     </div>
-                    <div className="flex mt-2 items-center justify-between">
+                    <div className="flex mt-1 items-center justify-between">
                         <p className='font-medium'>Price</p>
                         <Label>Rs. 50000</Label>
                     </div>

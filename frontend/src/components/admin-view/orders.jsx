@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Button } from '../ui/button'
-import { Dialog } from '../ui/dialog'
+import { Dialog, DialogTitle } from '../ui/dialog'
 import { AdminOrdersDetailView } from './order-details'
 
 
@@ -35,6 +35,7 @@ const AdminOrders = () => {
                             <TableCell>$450.33</TableCell>
                             <TableCell>
                                 <Dialog open={openDetailsDialog} onOpenChange={setOpenDetailsDialog}>
+                                    <DialogTitle className='sr-only'>Dialog Title</DialogTitle>
                                     <Button onClick={() => setOpenDetailsDialog(true)}>View Details</Button>
                                     <AdminOrdersDetailView />
                                 </Dialog>

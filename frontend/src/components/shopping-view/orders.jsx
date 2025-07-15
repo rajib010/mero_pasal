@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Button } from '../ui/button'
 import { ShoppingOrdersDetailView } from './order-details'
-import { Dialog } from '../ui/dialog'
+import { Dialog, DialogTitle } from '../ui/dialog'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllOrders } from '@/store/shop-slice/order'
 import { Badge } from '../ui/badge'
@@ -58,6 +58,7 @@ const ShoppingOrders = () => {
                   <TableCell>Rs. {orderItem?.totalAmount}</TableCell>
                   <TableCell>
                     <Dialog open={openDetailsDialog} onOpenChange={setOpenDetailsDialog}>
+                      <DialogTitle className='sr-only'>This is dialog title</DialogTitle>
                       <Button onClick={() => setOpenDetailsDialog(true)}>View Details</Button>
                       <ShoppingOrdersDetailView orderItem={orderItem}/>
                     </Dialog>

@@ -7,6 +7,12 @@ const app = new express();
 
 configDotenv()
 
+//at the top
+import webhookHandler from './routes/stripewebhook.js';
+
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), webhookHandler);
+
+
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true
@@ -32,6 +38,7 @@ import cartRouter from './routes/cart.js';
 import addressRouter from './routes/address.js';
 import shopOrderRouter from './routes/shopOrder.js';
 import dashboardRouter from './routes/dashboard.js'
+import stripeRouter from "./routes/stripe.js"
 
 app.use('/api/user', userRouter)
 app.use('/api/admin/products', adminProductRouter)
@@ -40,6 +47,7 @@ app.use('/api/shop/cart', cartRouter)
 app.use('/api/user/address', addressRouter)
 app.use('/api/shop/order', shopOrderRouter)
 app.use('/api/dashboard', dashboardRouter)
+app.use('/api/stripe',stripeRouter)
 
 
 export default app;
