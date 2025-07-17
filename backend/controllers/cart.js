@@ -184,7 +184,7 @@ const updateCart = async (req, res) => {
 
         await cart.populate({
             path: 'items.productId',
-            select: 'image title price salePrice'
+            select: 'image title price salePrice stock'
         })
 
         const populateCartItems = cart.items.map(item => ({
@@ -192,8 +192,10 @@ const updateCart = async (req, res) => {
             image: item.productId ? item.productId.image : null,
             title: item.productId ? item.productId.title : null,
             price: item.productId ? item.productId.price : null,
+            stock: item.productId.stock ?? null,
             salePrice: item.productId ? item.productId.salePrice : null,
             quantity: item.quantity
+
         }))
 
         return res.status(200).json({
