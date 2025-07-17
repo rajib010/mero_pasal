@@ -39,6 +39,7 @@ import addressRouter from './routes/address.js';
 import shopOrderRouter from './routes/shopOrder.js';
 import dashboardRouter from './routes/dashboard.js'
 import stripeRouter from "./routes/stripe.js"
+import orderRouter from "./routes/order.js"
 
 app.use('/api/user', userRouter)
 app.use('/api/admin/products', adminProductRouter)
@@ -48,6 +49,7 @@ app.use('/api/user/address', addressRouter)
 app.use('/api/shop/order', shopOrderRouter)
 app.use('/api/dashboard', dashboardRouter)
 app.use('/api/stripe',stripeRouter)
+app.use("/api/admin",orderRouter)
 
 
 export default app;
