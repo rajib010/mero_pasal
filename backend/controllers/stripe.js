@@ -4,9 +4,6 @@ export const createCheckoutSession = async (req, res) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const { cartItems, user, addressInfo, totalAmount } = req.body;
 
-    console.log("🚀 Creating checkout session for user:", user._id);
-    console.log("📦 Request body:", { cartItems, user, addressInfo, totalAmount });
-
     // Validation
     if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
         return res.status(400).json({ error: 'Cart items are required and must be a non-empty array' });
@@ -26,7 +23,6 @@ export const createCheckoutSession = async (req, res) => {
         calculatedTotal = cartItems.reduce((total, item) => {
             return total + (parseFloat(item.price) * item.quantity);
         }, 0);
-        console.log("💰 Calculated total amount:", calculatedTotal);
     }
 
     try {
@@ -46,8 +42,7 @@ export const createCheckoutSession = async (req, res) => {
                 const productData = {
                     name: item.title,
                     metadata: {
-                        productId: (item.productId || item._id).toString(), // Store productId in metadata
-                        // Store any other product info you might need
+                        productId: (item.productId || item._id).toString(), 
                         ...(item.category && { category: item.category }),
                         ...(item.description && { description: item.description }),
                     }
@@ -59,9 +54,9 @@ export const createCheckoutSession = async (req, res) => {
 
                 return {
                     price_data: {
-                        currency: 'usd',
+                        currency: 'npr',
                         product_data: productData,
-                        unit_amount: Math.round(parseFloat(item.price) * 100), // Ensure integer
+                        unit_amount: Math.round(parseFloat(item.price)*100) // Ensure integer
                     },
                     quantity: parseInt(item.quantity),
                 };

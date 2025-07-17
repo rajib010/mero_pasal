@@ -52,6 +52,16 @@ export const deleteProduct = createAsyncThunk(
     }
 )
 
+export const getAllOrders = createAsyncThunk(
+    '/order/getAll',
+    async () => {
+        const result = await axios.get(
+            `http://localhost:3000/api/admin/orders/delete/`
+        )
+        return result?.data;
+    }
+)
+
 const AdminProductsSlice = createSlice({
     name: 'adminProducts',
     initialState,
@@ -70,6 +80,5 @@ const AdminProductsSlice = createSlice({
             })
     }
 })
-
 
 export default AdminProductsSlice.reducer
