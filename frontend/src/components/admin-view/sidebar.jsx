@@ -9,6 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { Separator } from "../ui/separator";
 
 
 const adminSidebarMenuItems = [
@@ -43,7 +44,7 @@ function MenuItems({ setOpen }) {
             navigate(menuItem.path);
             setOpen ? setOpen(false) : null;
           }}
-          className="flex cursor-pointer text-xl items-center gap-2 rounded-md px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground">
+          className="flex cursor-pointer text-xl items-center gap-2 rounded-md px-3 py-5 text-muted-foreground hover:bg-muted hover:text-foreground">
           {menuItem.icon}
           <span>{menuItem.label}</span>
         </div>
@@ -73,11 +74,12 @@ export default function AdminSidebar({ open, setOpen }) {
       <aside className="hidden w-64 flex-col border-r bg-background p-6 lg:flex">
         <div
           onClick={() => navigate("/admin/dashboard")}
-          className="flex cursor-pointer items-center gap-2"
+          className="flex cursor-pointer items-center gap-2 py-10"
         >
           <ChartNoAxesCombined size={30} />
-          <h1 className="text-2xl font-extrabold">Admin Panel</h1>
+          <h1 className="text-2xl font-extrabold">Mero Pasal</h1>
         </div>
+          <Separator />
         <MenuItems />
       </aside>  
     </Fragment>

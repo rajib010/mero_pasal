@@ -2,6 +2,7 @@ import { Card } from '@/components/ui/card'
 import { getProductsCount, getUsersCount } from '@/store/admin-slice/dashboard'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { UserIcon, ShoppingBasketIcon, ShirtIcon, TypeIcon, ShoppingBag } from 'lucide-react'
 
 function AdminDashboard() {
 
@@ -12,27 +13,32 @@ function AdminDashboard() {
     {
       id: 'users',
       label: 'Users',
-      count: usersCount
+      count: usersCount,
+      icon:UserIcon
     },
     {
       id: 'products',
       label: 'Products',
-      count: productsCount
+      count: productsCount,
+      icon:ShoppingBasketIcon
     },
     {
       id: 'brands',
       label: 'Brands',
-      count: 8
+      count: 8,
+      icon:ShirtIcon
     },
     {
       id: 'categories',
       label: 'Categories',
-      count: 10
+      count: 10,
+      icon:TypeIcon
     },
     {
       id: 'sales',
       label: 'Sales',
-      count: '100k+'
+      count: '20',
+      icon:ShoppingBag
     },
   ]
 
@@ -49,7 +55,10 @@ function AdminDashboard() {
         {
           cardItems && cardItems.map((item) => (
             <Card className='landing-card' key={item.id}>
+              <div className='flex flex-col gap-4 items-center justify-center'>
+                <item.icon  className='size-10'/>
               <span className='font-bold text-xl'>Total {item.label}: {item.count}</span>
+              </div>
             </Card>
           ))
         }

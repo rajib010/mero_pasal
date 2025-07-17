@@ -1,4 +1,5 @@
 import { Order } from "../models/order.js";
+import { isValidObjectId } from "mongoose";
 
 
 const getAllOrders= async(req,res)=>{
@@ -41,7 +42,6 @@ const getAllOrders= async(req,res)=>{
       .sort(sort)
       .skip(skip)
       .limit(parseInt(limit))
-      .toArray();
 
     // Get total count for pagination
     const totalOrders = await Order.countDocuments(filter);
@@ -76,8 +76,11 @@ const getOrderById=async(req,res)=>{
     try {
     const { id } = req.params;
 
+    console.log("🚀 ~ getOrderById ~ id:", id)
+
+
     // Validate ObjectId
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       return res.status(400).json({
         success: false,
         message: 'Invalid order ID format'
@@ -85,7 +88,7 @@ const getOrderById=async(req,res)=>{
     }
 
     const order = await Order.findOne({ 
-      _id: new ObjectId(id) 
+      _id: id 
     });
 
     if (!order) {
@@ -145,7 +148,6 @@ const getOrderByUserId = async (req, res) => {
       .sort(sort)
       .skip(skip)
       .limit(parseInt(limit))
-      .toArray();
 
     const totalOrders = await Order.countDocuments(filter);
     const totalPages = Math.ceil(totalOrders / parseInt(limit));
@@ -180,7 +182,7 @@ const updateOrderstatus=async (req, res) => {
     const { orderStatus, paymentStatus } = req.body;
 
     // Validate ObjectId
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       return res.status(400).json({
         success: false,
         message: 'Invalid order ID format'
@@ -236,7 +238,7 @@ const updateOrderstatus=async (req, res) => {
 
     // Update the order
     const result = await Order.updateOne(
-      { _id: new ObjectId(id) },
+      { _id: id },
       { $set: updateData }
     );
 
@@ -249,7 +251,7 @@ const updateOrderstatus=async (req, res) => {
 
     // Get the updated order
     const updatedOrder = await Order.findOne({ 
-      _id: new ObjectId(id) 
+      _id: id 
     });
 
     res.status(200).json({
