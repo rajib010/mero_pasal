@@ -4,7 +4,8 @@ import axios from "axios";
 const initialState = {
     isLoading: false,
     usersCount: null,
-    productsCount: null
+    productsCount: null,
+    salesCount:null
 }
 
 export const getUsersCount = createAsyncThunk(
@@ -19,6 +20,13 @@ export const getProductsCount = createAsyncThunk(
     'dashboard/getProductsCount',
     async () => {
         const res = await axios.get('http://localhost:3000/api/dashboard/products-count')
+        return res?.data
+    }
+)
+export const getSalesCount = createAsyncThunk(
+    'dashboard/getSalesCount',
+    async () => {
+        const res = await axios.get('http://localhost:3000/api/dashboard/sales-count')
         return res?.data
     }
 )
@@ -52,6 +60,17 @@ const adminDashboardSlice = createSlice({
             .addCase(getProductsCount.rejected, (state, action) => {
                 state.isLoading = false
                 state.productsCount = null
+            })
+            .addCase(getSalesCount.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(getSalesCount.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.salesCount = action.payload?.data
+            })
+            .addCase(getSalesCount.rejected, (state, action) => {
+                state.isLoading = false
+                state.salesCount = null
             })
     }
 })

@@ -1,12 +1,12 @@
 import { Card } from '@/components/ui/card'
-import { getProductsCount, getUsersCount } from '@/store/admin-slice/dashboard'
+import { getProductsCount, getSalesCount, getUsersCount } from '@/store/admin-slice/dashboard'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { UserIcon, ShoppingBasketIcon, ShirtIcon, TypeIcon, ShoppingBag } from 'lucide-react'
 
 function AdminDashboard() {
 
-  const { isLoading, usersCount, productsCount } = useSelector((state) => state.adminDashboard)
+  const { isLoading, usersCount, productsCount, salesCount } = useSelector((state) => state.adminDashboard)
   const dispatch = useDispatch()
 
   const cardItems = [
@@ -37,7 +37,7 @@ function AdminDashboard() {
     {
       id: 'sales',
       label: 'Sales',
-      count: '20',
+      count: salesCount,
       icon:ShoppingBag
     },
   ]
@@ -45,6 +45,7 @@ function AdminDashboard() {
   useEffect(() => {
     dispatch(getUsersCount())
     dispatch(getProductsCount())
+    dispatch(getSalesCount())
   }, [dispatch])
 
 
